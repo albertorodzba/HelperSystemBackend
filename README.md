@@ -3,6 +3,8 @@ dotnet ef dbcontext scaffold "server=localhost;Port=3306;database=helperSystem;u
 "-f" to overwrite
 
 
+## Notes
+
 dotnet tool install --global dotnet-aspnet-codegenerator
 dotnet tool install --global dotnet-ef
 dotnet add package Microsoft.EntityFrameworkCore.Design
