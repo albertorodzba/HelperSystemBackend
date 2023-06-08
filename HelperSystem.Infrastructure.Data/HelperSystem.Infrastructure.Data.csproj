@@ -14,4 +14,10 @@
     <PackageReference Include="Mysql.EntityFrameworkCore" Version="6.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HelperSystem.Domain\HelperSystem.Domain.csproj" />
+  </ItemGroup>
+
+  
+
 </Project>

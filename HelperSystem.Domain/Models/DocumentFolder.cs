@@ -7,7 +7,7 @@ namespace HelperSystem.Domain.Models
     {
         public DocumentFolder()
         {
-            Files = new HashSet<File>();
+            DocumentFiles = new HashSet<DocumentFile>();
         }
 
         public long IdDocumentFolder { get; set; }
@@ -18,6 +18,6 @@ namespace HelperSystem.Domain.Models
 
         public virtual DocumentType? FkIdDocumentTypeNavigation { get; set; }
         public virtual PersonalFolder? FkIdPersonalFolderNavigation { get; set; }
-        public virtual ICollection<File> Files { get; set; }
+        public virtual ICollection<DocumentFile> DocumentFiles { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
+using HelperSystem.Domain.Models;
 namespace HelperSystem.Infrastructure.Data
 {
     public partial class helperSystemContext : DbContext
@@ -31,11 +32,11 @@ namespace HelperSystem.Infrastructure.Data
         public virtual DbSet<Benefit> Benefits { get; set; } = null!;
         public virtual DbSet<Customer> Customers { get; set; } = null!;
         public virtual DbSet<Disability> Disabilities { get; set; } = null!;
+        public virtual DbSet<DocumentFile> DocumentFiles { get; set; } = null!;
         public virtual DbSet<DocumentFolder> DocumentFolders { get; set; } = null!;
         public virtual DbSet<DocumentJob> DocumentJobs { get; set; } = null!;
         public virtual DbSet<DocumentType> DocumentTypes { get; set; } = null!;
         public virtual DbSet<Education> Educations { get; set; } = null!;
-        public virtual DbSet<File> Files { get; set; } = null!;
         public virtual DbSet<Gender> Genders { get; set; } = null!;
         public virtual DbSet<Job> Jobs { get; set; } = null!;
         public virtual DbSet<JobExtraInfo> JobExtraInfos { get; set; } = null!;
@@ -736,6 +737,49 @@ namespace HelperSystem.Infrastructure.Data
                     .HasColumnName("disability_name");
             });
 
+            modelBuilder.Entity<DocumentFile>(entity =>
+            {
+                entity.HasKey(e => e.IdFile)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("document_file");
+
+                entity.HasIndex(e => e.FkIdDocumentFolder, "FK_id_Folder");
+
+                entity.HasIndex(e => e.FileUrl, "file_url")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.IdFile, "id_file")
+                    .IsUnique();
+
+                entity.Property(e => e.IdFile)
+                    .HasColumnType("bigint(20)")
+                    .HasColumnName("id_file");
+
+                entity.Property(e => e.FileName)
+                    .HasMaxLength(50)
+                    .HasColumnName("file_name");
+
+                entity.Property(e => e.FileUrl)
+                    .HasMaxLength(300)
+                    .HasColumnName("file_url");
+
+                entity.Property(e => e.FkIdDocumentFolder)
+                    .HasColumnType("bigint(20)")
+                    .HasColumnName("FK_id_document_folder")
+                    .HasDefaultValueSql("'NULL'");
+
+                entity.Property(e => e.IdFileGenerated)
+                    .HasMaxLength(50)
+                    .HasColumnName("id_file_generated");
+
+                entity.HasOne(d => d.FkIdDocumentFolderNavigation)
+                    .WithMany(p => p.DocumentFiles)
+                    .HasForeignKey(d => d.FkIdDocumentFolder)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("document_file_ibfk_1");
+            });
+
             modelBuilder.Entity<DocumentFolder>(entity =>
             {
                 entity.HasKey(e => e.IdDocumentFolder)
@@ -868,49 +912,6 @@ namespace HelperSystem.Infrastructure.Data
                 entity.Property(e => e.EducationLevel)
                     .HasMaxLength(30)
                     .HasColumnName("education_level");
-            });
-
-            modelBuilder.Entity<File>(entity =>
-            {
-                entity.HasKey(e => e.IdFile)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("file");
-
-                entity.HasIndex(e => e.FkIdFolderDocument, "FK_id_Folder");
-
-                entity.HasIndex(e => e.FileUrl, "file_url")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.IdFile, "id_file")
-                    .IsUnique();
-
-                entity.Property(e => e.IdFile)
-                    .HasColumnType("bigint(20)")
-                    .HasColumnName("id_file");
-
-                entity.Property(e => e.FileName)
-                    .HasMaxLength(50)
-                    .HasColumnName("file_name");
-
-                entity.Property(e => e.FileUrl)
-                    .HasMaxLength(300)
-                    .HasColumnName("file_url");
-
-                entity.Property(e => e.FkIdFolderDocument)
-                    .HasColumnType("bigint(20)")
-                    .HasColumnName("FK_id_folder_document")
-                    .HasDefaultValueSql("'NULL'");
-
-                entity.Property(e => e.IdFileGenerated)
-                    .HasMaxLength(50)
-                    .HasColumnName("id_file_generated");
-
-                entity.HasOne(d => d.FkIdFolderDocumentNavigation)
-                    .WithMany(p => p.Files)
-                    .HasForeignKey(d => d.FkIdFolderDocument)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("file_ibfk_1");
             });
 
             modelBuilder.Entity<Gender>(entity =>
